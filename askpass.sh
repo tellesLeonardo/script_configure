@@ -7,11 +7,11 @@
 # delete any trailing space or colon and write it to stderr
 promptmsg="enter password:"
 [ "$*" != "" ] && promptmsg="${*% }"
-echo -en "$0: ${promptmsg%:}: " >&2
+echo -en "${promptmsg%:}: " >&2
 
 pw=""
 stars=0
-cx='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789' # chars that can be echoed as feedback for a keypress, there have been problems when using special chars
+cx='*' # chars that can be echoed as feedback for a keypress, there have been problems when using special chars
 
 while :
 do
@@ -43,10 +43,10 @@ do
             ((rnd = RANDOM % 3 + 1)) # bash specific
             ((stars += rnd))
             # echos $rnd much of the characters from $cx
-            while [ $((rnd--)) -gt 0 ]
-            do
+            # while [ $((rnd--)) -gt 0 ]
+            # do
                 echo -n "${cx:$(($RANDOM % ${#cx})):1}" >&2
-            done
+            # done
         ;;
         "")
             # no new character, so pw is completed
