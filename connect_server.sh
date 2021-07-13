@@ -1,28 +1,38 @@
 #!/bin/bash
-SCRIPT_PATH="/home/alertrack/Documentos/projetos_alertrack/scripts/askpass.sh"
 
 ip=$1
+user=$2
+password=$3
 echo "========================================================================="
 echo "========================================================================="
 echo "Iniciando o script para sincronizar a maquina com o swarm"
 
-read -p 'Nome de usuário: ' user
+echo $3 | sudo -S apt-get install sshpass -y
+echo $3 | sudo -S yum install sshpass -y
 
-case $1 in
-    "")
-        read -p 'Ip do servidor: ' ip
-    ;;
-esac  
 
-password=$("$SCRIPT_PATH")
 
-echo "o ip: $ip"
-echo "Usuário: $user" 
-echo "Senha: $password"
+echo "o ip: $1"
+echo "Usuário: $2" 
+echo "Senha: $3"
+echo "Finalizando o script para sincronizar a maquina $1 com o swarm"
 
-"ssh $user@$ip 'bash -s' < script.sh"
-
-echo "Finalizando o script para sincronizar a maquina $ip com o swarm"
-echo "========================================================================="
-echo "========================================================================="
+case $4 in
+"node")
+    echo $3 | sshpass -p $3 ssh -o StrictHostKeyChecking=no $2@$1 'bash -s' < $(pwd)/lib/scripts/config_docker/download_node.sh $3 $5 $6
+;;
+"master")
+    
+    echo $3
+    sshpass -p $3 scp $(pwd)/lib/scripts/config_docker/portainer-agent-stack.yml $2@$1:~/Downloads/
+   
+    echo "teste" 
+#    sshpass -p $3 ssh $2@$1 'bash -s' < $(pwd)/download_master.sh $3
+    sshpass -p $3 ssh $2@$1 'bash -s' < $(pwd)/lib/scripts/config_docker/download_master.sh $3  
+    
+;;
+*)
+    echo "sem case"
+;;
+esac
 

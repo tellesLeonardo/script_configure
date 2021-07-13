@@ -1,1 +1,0 @@
-https://www.shellhacks.com/ssh-execute-remote-command-script-linux/
